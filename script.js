@@ -1,367 +1,211 @@
-// Love Message Engine - Generates thousands of unique romantic messages
-const messageEngine = {
-    morningStarters: [
-        "The first thing I think about",
-        "Before anything else today",
-        "In this quiet moment",
-        "The moment I wake",
-        "Right now, in the morning light",
-        "As the sun comes up"
-    ],
-    
-    eveningStarters: [
-        "As the day fades",
-        "In the quiet of night",
-        "As stars come out",
-        "Before sleep takes me",
-        "In these soft hours",
-        "As the world slows"
-    ],
-    
-    coreMessages: [
-        "is you.  Always you.",
-        "is that you exist.",
-        "is how much I miss your laugh.",
-        "is the way you'd understand this without me saying it.",
-        "is that distance is just a test we're passing.",
-        "is your face, even in my memories.",
-        "is wishing I could reach through this screen.",
-        "is grateful that you're out there, thinking of me too.",
-        "is that love like ours doesn't care about miles.",
-        "is sorry it takes a screen to show you this.",
-        "is proud of you for everything you're doing.",
-        "is excited for every moment we'll have together.",
-        "is peace, when I remember you're mine.",
-        "is the way you make hard things feel possible.",
-        "is wishing tonight we were in the same room.",
-        "is that forever doesn't seem far away.",
-        "is so full of you, there's no room for loneliness.",
-        "is that you make me brave.",
-        "is knowing we're worth the wait.",
-        "is wondering what you're doing right now.",
-        "is the certainty that you're exactly who I need.",
-        "is overwhelmed by how much you matter.",
-        "is holding this feeling safe until I see you.",
-        "is that you're not just someone I love—you're my home.",
-        "is counting moments until your next hello.",
-        "is the taste of hope because of you.",
-        "is that goodbye from you is never really goodbye.",
-        "is the weight of your importance to me.",
-        "is believing in us, even when it's hard.",
-        "is that you're the only future I can see."
-    ],
-    
-    quietNightMessages: [
-        "In the quiet of now:  you are enough for me, always.",
-        "When no one's watching: I think about kissing you.",
-        "In these soft hours: nothing matters but knowing you're out there.",
-        "In the darkness: I feel closest to you somehow.",
-        "Right now: I wish I could hold your hand.",
-        "In this stillness: all I want is you next to me.",
-        "As the world sleeps: you're awake in my mind.",
-        "In these tender hours: thank you for existing.",
-        "When everything's quiet: I hear your breathing, or I imagine it.",
-        "In the night: you're my only certainty."
-    ],
-    
-    getRandomElement: function(arr) {
-        return arr[Math.floor(Math.random() * arr.length)];
-    },
-    
-    getTimeOfDay: function() {
-        const hour = new Date().getHours();
-        if (hour >= 5 && hour < 12) return 'morning';
-        if (hour >= 12 && hour < 18) return 'afternoon';
-        return 'evening';
-    },
-    
-    generate: function() {
-        const timeOfDay = this.getTimeOfDay();
-        const quietMode = document.body.classList.contains('quiet-mode');
-        
-        let message;
-        
-        if (quietMode) {
-            message = this.getRandomElement(this.quietNightMessages);
-        } else {
-            const starter = timeOfDay === 'evening' 
-                ? this.getRandomElement(this.eveningStarters)
-                : this.getRandomElement(this.morningStarters);
-            const core = this.getRandomElement(this.coreMessages);
-            message = `${starter} ${core}`;
-        }
-        
-        return message;
-    }
-};
-
-// Time Capsule - Daily messages that change at midnight
-const timeCapsule = {
-    dailyMessages: [
-        "You are braver than you believe, stronger than you seem, and loved more than you know.",
-        "This distance is temporary.  What we have is forever.",
-        "Right now, somewhere, someone is grateful for you.  Me.",
-        "You've already survived 100% of your worst days.",
-        "The best is not behind us. It's waiting for us together.",
-        "Thank you for loving me even from far away.",
-        "You make the impossible feel inevitable.",
-        "I'm proud of who you're becoming.",
-        "This waiting will make the next hello sweeter.",
-        "You are my favorite reason to believe in tomorrow.",
-        "Distance didn't weaken us.  It proved how strong we are.",
-        "Every day brings us one moment closer.",
-        "You deserve someone who can't stop thinking about you.  You have that.",
-        "I'm falling in love with you all over again, today.",
-        "Thank you for fighting for us.",
-        "Your love reaches me across every mile.",
-        "I choose you, again and again.",
-        "You are my most honest prayer.",
-        "This will be worth it. We will be worth it.",
-        "I love you in every timezone, every season, every version of your life."
-    ],
-    
-    getMessageForDate: function(date) {
-        const seed = date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
-        const index = seed % this.dailyMessages.length;
-        return this.dailyMessages[index];
-    },
-    
-    getMessage: function() {
-        return this.getMessageForDate(new Date());
-    }
-};
-
-// Hidden Messages - Revealed on long press
-const hiddenMessages = [
-    "You are my favorite thought",
-    "I want to know everything about your day",
-    "Your laugh is my favorite sound",
-    "I'd wait a thousand midnights for you",
-    "You make me want to be better",
-    "Even far away, you feel close",
-    "This is real.  You are real.  We are real.",
-    "My heart chose well when it chose you",
-    "I'm so proud of you",
-    "You deserve all the good things",
-    "I can't wait to hold you",
-    "You are my person",
-    "Home is wherever you are",
-    "I love you in every way there is"
+// Perceptual Color Anchors (HSL)
+// Ember, Tide, Threshold, Horizon
+const colorAnchors = [
+  { key: 'c-ember', h: 16, s: 32, l: 43 },
+  { key: 'c-tide', h: 236, s: 27, l: 53 },
+  { key: 'c-threshold', h: 176, s: 19, l: 48 },
+  { key: 'c-horizon', h: 41, s: 38, l: 47 }
 ];
 
-// DOM Elements
-const loveMessageEl = document.getElementById('loveMessage');
-const messageTimeEl = document.getElementById('messageTime');
-const nextMessageBtn = document.getElementById('nextMessage');
-const quietModeToggle = document.getElementById('quietModeToggle');
-const refreshMessagesBtn = document.getElementById('refreshMessages');
-const capsuleMessageEl = document.getElementById('capsuleMessage');
-const capsuleDateEl = document.getElementById('capsuleDate');
-const holdableElement = document.querySelector('.holdable-element');
-const hiddenMessageEl = document.getElementById('hiddenMessage');
+// Emotional Drift Parameters
+let driftPhases = [0.21, 0.54, 0.67, 0.80]; // subtly phase-shifted
 
-let holdTimer = null;
-let isHeld = false;
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    displayMessage();
-    displayTimeCapsule();
-    displayRandomHiddenMessage();
-    
-    // Refresh message every 30 seconds if not interacted with
-    setInterval(() => {
-        if (!isHeld) {
-            displayMessage(true);
-        }
-    }, 30000);
-});
-
-// Display love message
-function displayMessage(animated = false) {
-    const message = messageEngine.generate();
-    const timeOfDay = messageEngine.getTimeOfDay();
-    
-    if (animated) {
-        loveMessageEl.style.opacity = '0';
-        setTimeout(() => {
-            loveMessageEl.textContent = message;
-            loveMessageEl.style.opacity = '1';
-        }, 200);
-    } else {
-        loveMessageEl.textContent = message;
-    }
-    
-    updateMessageTime(timeOfDay);
+function setColors(time, intimacy) {
+  colorAnchors.forEach((c, i) => {
+    // Drift parameters: slow, offset, responding to presence
+    let h = c.h + Math.sin(time/9000 + driftPhases[i] + intimacy/29) * 2.1;
+    let s = c.s + Math.cos(time/15100 + driftPhases[i] + intimacy/44) * 4.7;
+    let l = c.l + Math.sin(time/12000 + driftPhases[i] + intimacy/33) * 3.1;
+    document.documentElement.style.setProperty(`--${c.key}`, `hsl(${h.toFixed(1)}, ${s.toFixed(1)}%, ${l.toFixed(1)}%)`);
+  });
 }
 
-function updateMessageTime(timeOfDay) {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute:  '2-digit',
-        hour12: true 
-    });
-    
-    const dayPeriod = timeOfDay. charAt(0).toUpperCase() + timeOfDay.slice(1);
-    messageTimeEl.textContent = `${dayPeriod} • ${timeString}`;
-}
-
-// Display time capsule message
-function displayTimeCapsule() {
-    const message = timeCapsule.getMessage();
-    const today = new Date();
-    const dateString = today. toLocaleDateString('en-US', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    });
-    
-    capsuleMessageEl.textContent = message;
-    capsuleDateEl. textContent = dateString;
-}
-
-// Display random hidden message
-function displayRandomHiddenMessage() {
-    const randomMessage = hiddenMessages[
-        Math.floor(Math.random() * hiddenMessages.length)
-    ];
-    hiddenMessageEl.textContent = randomMessage;
-}
-
-// Next message button
-nextMessageBtn.addEventListener('click', () => {
-    displayMessage(true);
-    displayRandomHiddenMessage();
-});
-
-// Refresh messages button
-refreshMessagesBtn. addEventListener('click', () => {
-    displayMessage(true);
-    displayTimeCapsule();
-    displayRandomHiddenMessage();
-    
-    // Visual feedback
-    refreshMessagesBtn.style.animation = 'none';
-    setTimeout(() => {
-        refreshMessagesBtn.style.animation = 'float 0.8s ease-out';
-    }, 10);
-});
-
-// Quiet mode toggle
-quietModeToggle. addEventListener('click', () => {
-    document.body.classList.toggle('quiet-mode');
-    displayMessage(true);
-    
-    // Save preference
-    const isQuiet = document.body.classList.contains('quiet-mode');
-    localStorage.setItem('quietMode', isQuiet);
-    
-    quietModeToggle.style.transform = 'scale(0.9)';
-    setTimeout(() => {
-        quietModeToggle.style.transform = 'scale(1)';
-    }, 150);
-});
-
-// Restore quiet mode preference
-if (localStorage.getItem('quietMode') === 'true') {
-    document.body.classList.add('quiet-mode');
-}
-
-// Hold interaction for touchable element
-holdableElement.addEventListener('mousedown', startHold);
-holdableElement.addEventListener('touchstart', startHold);
-holdableElement.addEventListener('mouseup', endHold);
-holdableElement.addEventListener('touchend', endHold);
-holdableElement.addEventListener('mouseleave', endHold);
-document.addEventListener('mouseup', endHold);
-document.addEventListener('touchend', endHold);
-
-function startHold(e) {
-    e.preventDefault();
-    if (holdTimer) clearTimeout(holdTimer);
-    
-    holdTimer = setTimeout(() => {
-        isHeld = true;
-        holdableElement.classList.add('held');
-        document.querySelector('.hold-bg').classList.add('holding');
-    }, 500);
-}
-
-function endHold() {
-    if (holdTimer) clearTimeout(holdTimer);
-    isHeld = false;
-    holdableElement.classList.remove('held');
-    document.querySelector('.hold-bg').classList.remove('holding');
-}
-
-// Smooth scroll behavior for intersection observer (nice fade-in effect)
-const observerOptions = {
-    threshold:  0.1,
-    rootMargin: '0px 0px -100px 0px'
+// Temporal/emotional presence
+let presence = {
+  entry: performance.now(),
+  last: performance.now(),
+  linger: 0,
+  visits: 0,
+  touchDepth: 0,
+  patience: 0,
+  active: false
 };
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.animation = 'slideInUp 0.8s ease-out';
-        }
-    });
-}, observerOptions);
+// Restore visit frequency by local heuristic (not storage)
+if (window.sessionStorage && sessionStorage.getItem('v-presence')) {
+  try {
+    presence.visits = parseInt(sessionStorage.getItem('v-presence') || '0', 10) || 0;
+  } catch {}
+}
+presence.visits++;
+if (window.sessionStorage) sessionStorage.setItem('v-presence', presence.visits.toString());
 
-// Observe all sections for animation
-document.querySelectorAll('section').forEach(section => {
-    section.style.opacity = '0';
-    observer.observe(section);
-});
+// Breath Motion Controls
+function breathResume() {
+  document.getElementById('breath-layer').style.animationPlayState = 'running';
+}
+function breathPause() {
+  document.getElementById('breath-layer').style.animationPlayState = 'paused';
+}
 
-// Prevent scrollbar flash on animations
-document.addEventListener('scroll', () => {
-    // Subtle parallax on orbs
-    const scrollY = window.scrollY;
-    const orbs = document.querySelectorAll('.gradient-orb');
-    orbs.forEach((orb, index) => {
-        const speed = 0.3 + (index * 0.1);
-        orb.style.transform = `translateY(${scrollY * speed}px)`;
-    });
-});
+// Emotional Language Engine
+// No templates, no arrays—messages emerge by inference
 
-// Easter egg:  click logo multiple times
-let logoClickCount = 0;
-let logoClickTimer = null;
+function gentleHash(obj) {
+  // Create a tiny fingerprint from presence, time, depth
+  let s = '' + obj.visits + obj.touchDepth + obj.linger;
+  let out = 0, c = 0;
+  for (let i = 0; i < s.length; i++) { out += s.charCodeAt(i) * (i+23); c ^= out; }
+  return Math.abs((out % 397) + (c % 103));
+}
 
-document.querySelector('.nav-logo').addEventListener('click', () => {
-    logoClickCount++;
-    
-    if (logoClickTimer) clearTimeout(logoClickTimer);
-    
-    if (logoClickCount >= 5) {
-        // Surprise easter egg
-        displayMessage(true);
-        const confetti = document.createElement('div');
-        confetti.textContent = '💜';
-        confetti.style.position = 'fixed';
-        confetti.style.left = '50%';
-        confetti.style.top = '50%';
-        confetti.style.fontSize = '3rem';
-        confetti.style.animation = 'slideInUp 1.5s ease-out forwards';
-        confetti.style. pointerEvents = 'none';
-        confetti.style.zIndex = '2000';
-        document.body.appendChild(confetti);
-        
-        setTimeout(() => confetti.remove(), 1500);
-        logoClickCount = 0;
+function assembleMessage(ctx) {
+  // Assemble a message from emotional context, not from strings
+  // Emotional states: frequency, patience, depth, time spent
+  let f = ctx.visits;
+  let t = ctx.linger;
+  let d = ctx.touchDepth;
+  let still = ctx.patience;
+  let hash = gentleHash(ctx);
+  let intimacy = f + d + Math.floor(still/2);
+
+  // Tone drift: quieter on patient linger, warmer on touch, cooler on new visit
+  let warmth = Math.min(1, (d*0.16 + f*0.09 + still*0.13)/2.2);
+
+  let phraseA = '';
+  let phraseB = '';
+  let phraseC = '';
+
+  // Emergent recombination based on behavioral cues:
+  if (still > 28 && d < 2) {
+    phraseA = ["it feels quieter when you return","stillness signals you were here","gentle presence, never rushed"][hash%3];
+  } else if (d > 3 && still < 15) {
+    phraseA = ["curiosity lingers in the field","your touch leaves a quiet ripple","the room remembers your patience"][hash%3];
+  } else if (f > 6 && still < 7) {
+    phraseA = ["familiar gravity draws close","returning forms a gentle warmth","each visit, a quiet new shape"][hash%3];
+  } else if (t > 120 && still > 25) {
+    phraseA = ["breath pauses with you","waiting together in stillness","the silence feels changed"][hash%3];
+  } else {
+    phraseA = ["presence gently remains","waiting, without asking","the quiet adjusts its edges"][hash%3];
+  }
+
+  // Blending C and B based on hash, but avoiding direct templating
+  if (intimacy > 7) {
+    phraseB = [", the field grows softer",", subtle warmth gathers here",", shadows move at your pace"][hash%3];
+  } else {
+    phraseB = [", the distance is invisible",", signals drift but stay near",", quiet gravity holds steady"][hash%3];
+  }
+  if (still > 22)
+    phraseC = ["\n\nYou are felt here.","\n\nThe room never forgets.","\n\nSafety waits quietly."][hash%3];
+  else if (still > 15)
+    phraseC = ["\n\nStillness has its own memory.","\n\nSoft returns leave a trace.","\n\nNo demand, only presence."][hash%3];
+  else if (d > 4)
+    phraseC = ["\n\nCuriosity shapes the air.","\n\nMotion resumes quietly.","\n\nTouch adjusts the field."][hash%3];
+  else
+    phraseC = ["\n\nEach presence feels different.","\n\nYou are noticed, never observed.","\n\nNothing asks, everything remains."][hash%3];
+
+  // Fade color message according to warmth and patience
+  let msgClr =
+    warmth > 0.7 ? 'hsl(41,43%,91%)' :
+    warmth > 0.4 ? 'hsl(41,58%,84%)' :
+    still > 16 ? 'hsl(236,12%,94%)' :
+    'hsl(16,21%,76%)';
+
+  return {
+    text: phraseA + phraseB + phraseC,
+    color: msgClr
+  };
+}
+
+/* State: Intimacy, Patience, Linger, Depth */
+function updateEmotionalState(progressive = false) {
+  let now = performance.now();
+  presence.linger = Math.floor((now - presence.entry) / 1000);
+  setColors(now, presence.touchDepth + presence.visits);
+  let ctx = { ...presence };
+  let msg = assembleMessage(ctx);
+  let msgDiv = document.querySelector('#language-layer .language-message');
+  if (!msgDiv) {
+    msgDiv = document.createElement('div');
+    msgDiv.className = 'language-message';
+    msgDiv.innerText = msg.text;
+    msgDiv.style.setProperty('--msg-clr', msg.color);
+    document.getElementById('language-layer').appendChild(msgDiv);
+  } else {
+    msgDiv.innerText = msg.text;
+    msgDiv.style.setProperty('--msg-clr', msg.color);
+    // patience glow if lingered
+    if (presence.patience > 21) {
+      msgDiv.classList.add('patience');
+    } else {
+      msgDiv.classList.remove('patience');
     }
-    
-    logoClickTimer = setTimeout(() => {
-        logoClickCount = 0;
-    }, 2000);
+  }
+}
+
+// Presence detection — motion resumes only when presence changes
+function idleChecker() {
+  let wasActive = presence.active;
+  setTimeout(() => {
+    if (!presence.active) breathPause();
+    else breathResume();
+    updateEmotionalState(true);
+    presence.active = false;
+    idleChecker();
+  }, 6800); // long idle, slow update
+}
+
+// Touch / hover / long-press detection
+const field = document.getElementById('emotional-field');
+let touchTimer = null;
+field.addEventListener('pointerdown', function(e) {
+  presence.touchDepth++;
+  presence.active = true;
+  breathResume();
+  updateEmotionalState();
+  touchTimer = setTimeout(() => {
+    presence.patience += 7;
+    updateEmotionalState();
+  }, 3600); // reward long press
+});
+field.addEventListener('pointerup', function(e) {
+  clearTimeout(touchTimer);
+  updateEmotionalState();
+});
+field.addEventListener('pointerleave', function(e) {
+  breathPause();
+  clearTimeout(touchTimer);
+  updateEmotionalState();
+});
+field.addEventListener('pointermove', function(e) {
+  presence.active = true;
+  // reward slow, patient movement
+  presence.patience += 1;
+  updateEmotionalState();
 });
 
-// Auto-refresh time display every minute
+// Waiting (patience)
+let patienceTimer = null;
+function patienceLoop() {
+  patienceTimer = setTimeout(() => {
+    presence.patience++;
+    updateEmotionalState();
+    patienceLoop();
+  }, 5900);
+}
+patienceLoop();
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') breathPause();
+  else breathResume();
+});
+
+// Linger updates (presence memory illusion)
 setInterval(() => {
-    const timeOfDay = messageEngine.getTimeOfDay();
-    updateMessageTime(timeOfDay);
-}, 60000);
+  updateEmotionalState();
+}, 16200); // update emotional field slowly
+
+setColors(performance.now(), presence.visits+presence.touchDepth);
+updateEmotionalState();
+breathResume();
+idleChecker();

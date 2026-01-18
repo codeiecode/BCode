@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Across the Distance</title>
+    <link rel="stylesheet" href="style. css">
+</head>
+<body>
+    <div class="noise"></div>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">∞</div>
+        <div class="nav-controls">
+            <button id="quietModeToggle" class="btn-icon" title="Quiet Nights Mode">
+                <span class="moon-icon">◐</span>
+            </button>
+            <button id="refreshMessages" class="btn-icon" title="New Message">
+                <span class="refresh-icon">↻</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="word">Different</span>
+                <span class="word">places.</span>
+                <span class="word">Same</span>
+                <span class="word">heartbeat.</span>
+            </h1>
+            <p class="hero-subtitle">A love that knows no distance</p>
+        </div>
+
+        <div class="scroll-indicator">
+            <div class="dot"></div>
+            <p>Scroll to drift</p>
+        </div>
+    </section>
+
+    <!-- Love Engine Section -->
+    <section class="love-engine">
+        <div class="section-header">
+            <h2>What I'd tell you right now</h2>
+            <p class="section-desc">A thought, reborn for every moment</p>
+        </div>
+
+        <div class="message-container">
+            <div class="message-card">
+                <div class="message-inner">
+                    <p class="message-text" id="loveMessage">Loading your moment...</p>
+                    <span class="message-time" id="messageTime"></span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-secondary" id="nextMessage">Next thought</button>
+    </section>
+
+    <!-- Distance Awareness Section -->
+    <section class="distance-space">
+        <div class="section-header">
+            <h2>Across the Miles</h2>
+            <p class="section-desc">But never across my heart</p>
+        </div>
+
+        <div class="distance-visualization">
+            <div class="location location-you">
+                <div class="pulse-dot"></div>
+                <p>Where you are</p>
+            </div>
+
+            <div class="distance-line">
+                <div class="light-signal signal-1"></div>
+                <div class="light-signal signal-2"></div>
+                <div class="light-signal signal-3"></div>
+            </div>
+
+            <div class="location location-me">
+                <div class="pulse-dot"></div>
+                <p>Where I am</p>
+            </div>
+        </div>
+
+        <p class="distance-text">Every pulse is thinking of you</p>
+    </section>
+
+    <!-- Touch Interaction Section -->
+    <section class="touch-space">
+        <div class="section-header">
+            <h2>Hold for something deeper</h2>
+            <p class="section-desc">Press and don't let go</p>
+        </div>
+
+        <div class="holdable-element">
+            <div class="hold-bg"></div>
+            <div class="hold-content">
+                <p class="hold-text-visible">Hold here</p>
+                <p class="hold-text-hidden" id="hiddenMessage">You are my favorite thought</p>
+            </div>
+        </div>
+
+        <p class="touch-hint">Only revealed when you linger</p>
+    </section>
+
+    <!-- Time Capsule Section -->
+    <section class="time-capsule">
+        <div class="section-header">
+            <h2>Your message today</h2>
+            <p class="section-desc">Different every sunrise</p>
+        </div>
+
+        <div class="capsule-card">
+            <div class="capsule-date" id="capsuleDate"></div>
+            <div class="capsule-divider"></div>
+            <p class="capsule-message" id="capsuleMessage">Loading today's message...</p>
+        </div>
+    </section>
+
+    <!-- Quiet Nights Section -->
+    <section class="quiet-mode-info">
+        <div class="section-header">
+            <h2>Quiet Nights Mode</h2>
+            <p class="section-desc">When you need to feel close</p>
+        </div>
+
+        <div class="mode-description">
+            <p>In quiet nights mode, everything slows down. The light grows softer.  Messages run deeper. Like a hand held in the dark—present, gentle, true.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Made with everything I have</p>
+        <p class="footer-note">Just for you</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
